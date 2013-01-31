@@ -64,6 +64,7 @@ string get_file_md5(const string path){
         input_file.close();
         result = unsignedchar_to_hexastring(digest, MD5_DIGEST_LENGTH);
     }
+    delete buffer;
     return result;
 }
 
