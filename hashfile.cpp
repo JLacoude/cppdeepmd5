@@ -1,44 +1,8 @@
 #include "hashfile.hpp"
 
 std::string unsignedchar_to_hexastring(const unsigned char * input, std::size_t input_size);
-void _get_directory_md5(boost::filesystem::path path, std::string prefix, std::map<std::string, std::string> * file_list);
 
 using namespace std;
-namespace fs = boost::filesystem;
-
-/**
- * @inheritdoc
- */
-map<string, string> get_directory_md5(const string path){
-    map<string, string> result;
-    fs::path current_path = path;
-    string prefix;
-    _get_directory_md5(path, prefix, &result);
-    return result;
-}
-
-void _get_directory_md5(fs::path path, string prefix, map<string, string> * file_list){
-    try{
-        if(fs::exists(path)){
-            if(fs::is_directory(path)){
-                fs::directory_iterator end_iter;
-                if(path.filename().string() != "." && path.filename().string() != ".."){
-                    prefix.append(path.filename().string()).append("/");
-                }
-                for(fs::directory_iterator dir_iter(path); dir_iter != end_iter; ++dir_iter){
-                    _get_directory_md5(dir_iter->path(), prefix, file_list);
-                }
-            }
-            else if(fs::is_regular_file(path)){
-                string md5 = get_file_md5(path.string());
-                file_list->insert(pair<string, string>(prefix.append(path.filename().string()), md5));
-            }
-        }
-    }
-    catch(const fs::filesystem_error& ex){
-        cerr << ex.what() << endl;
-    }
-}
 
 /**
  * @inheritdoc
